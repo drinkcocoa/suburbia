@@ -1,11 +1,15 @@
 import { FaCartShopping, FaPlus } from "react-icons/fa6";
-import { PrismicNextLink, PrismicNextLinkProps } from "@prismicio/next";
+import Link from "next/link";
 import clsx from "clsx";
+import { ComponentProps } from "react";
+import { LinkField } from "@/types";
 
-export type ButtonProps = PrismicNextLinkProps & {
+export type ButtonProps = Omit<ComponentProps<typeof Link>, "href"> & {
   color?: "orange" | "purple" | "lime";
   size?: "sm" | "md" | "lg";
   icon?: "cart" | "skateboard" | "plus";
+  href?: string;
+  field?: LinkField;
 };
 
 export function ButtonLink({
@@ -14,10 +18,15 @@ export function ButtonLink({
   icon,
   children,
   className,
+  href,
+  field,
   ...props
 }: ButtonProps) {
+  const linkHref = href || field?.url || "#";
+
   return (
-    <PrismicNextLink
+    <Link
+      href={linkHref}
       className={clsx(
         "button-cutout group mx-4 inline-flex items-center bg-gradient-to-b from-25% to-75% bg-[length:100%_400%] font-bold transition-[filter,background-position] duration-300 hover:bg-bottom",
         size === "sm" && "gap-2.5 py-2 text-base",
@@ -50,7 +59,7 @@ export function ButtonLink({
         </>
       ) : null}
       {children}
-    </PrismicNextLink>
+    </Link>
   );
 }
 
