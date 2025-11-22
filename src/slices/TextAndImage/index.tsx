@@ -1,9 +1,3 @@
-import { Content } from "@prismicio/client";
-import {
-  PrismicRichText,
-  PrismicText,
-  SliceComponentProps,
-} from "@prismicio/react";
 import clsx from "clsx";
 
 import { Bounded } from "@/components/Bounded";
@@ -11,6 +5,7 @@ import { ButtonLink } from "@/components/ButtonLink";
 import { Heading } from "@/components/Heading";
 import { SlideIn } from "@/components/SlideIn";
 import { ParallaxImage } from "./ParallaxImage";
+import { TextAndImageSliceData, getTextFromRichText } from "@/types";
 
 declare module "react" {
   interface CSSProperties {
@@ -18,14 +13,11 @@ declare module "react" {
   }
 }
 
-/**
- * Props for `TextAndImage`.
- */
-export type TextAndImageProps = SliceComponentProps<Content.TextAndImageSlice>;
+export type TextAndImageProps = {
+  slice: TextAndImageSliceData;
+  index: number;
+};
 
-/**
- * Component for "TextAndImage" Slices.
- */
 const TextAndImage = ({ slice, index }: TextAndImageProps): JSX.Element => {
   const theme = slice.primary.theme;
   return (
@@ -50,12 +42,14 @@ const TextAndImage = ({ slice, index }: TextAndImageProps): JSX.Element => {
         >
           <SlideIn>
             <Heading size="lg" as="h2">
-              <PrismicText field={slice.primary.heading} />
+              {getTextFromRichText(slice.primary.heading)}
             </Heading>
           </SlideIn>
           <SlideIn>
             <div className="max-w-md text-lg leading-relaxed">
-              <PrismicRichText field={slice.primary.body} />
+              {slice.primary.body.map((item, i) => (
+                <p key={i}>{item.text}</p>
+              ))}
             </div>
           </SlideIn>
           <SlideIn>

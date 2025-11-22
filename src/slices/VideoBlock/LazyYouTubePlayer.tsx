@@ -1,10 +1,9 @@
 "use client";
 
-import { KeyTextField } from "@prismicio/client";
 import { useEffect, useRef, useState } from "react";
 
 type VideoProps = {
-  youTubeID: KeyTextField;
+  youTubeID: string;
 };
 
 export function LazyYouTubePlayer({ youTubeID }: VideoProps) {

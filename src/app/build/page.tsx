@@ -5,9 +5,8 @@ import Link from "next/link";
 import React from "react";
 
 import { CustomizerControlsProvider } from "./context";
-import { createClient } from "@/prismicio";
+import { customizerData } from "@/data";
 import Preview from "./Preview";
-import { asImageSrc } from "@prismicio/client";
 import Controls from "./Controls";
 import Loading from "./Loading";
 
@@ -23,9 +22,7 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const client = createClient();
-  const customizerSettings = await client.getSingle("board_customizer");
-  const { wheels, decks, metals } = customizerSettings.data;
+  const { wheels, decks, metals } = customizerData;
 
   const defaultWheel =
     wheels.find((wheel) => wheel.uid === searchParams.wheel) ?? wheels[0];
@@ -37,10 +34,10 @@ export default async function Page(props: {
     metals.find((metal) => metal.uid === searchParams.bolt) ?? metals[0];
 
   const wheelTextureURLs = wheels
-    .map((texture) => asImageSrc(texture.texture))
+    .map((texture) => texture.texture.url)
     .filter((url): url is string => Boolean(url));
   const deckTextureURLs = decks
-    .map((texture) => asImageSrc(texture.texture))
+    .map((texture) => texture.texture.url)
     .filter((url): url is string => Boolean(url));
 
   return (

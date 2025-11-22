@@ -1,17 +1,17 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
-import { Content } from "@prismicio/client";
+import { WheelItem, DeckItem, MetalItem } from "@/types";
 
 type CustomizerControlsContext = {
-  selectedWheel?: Content.BoardCustomizerDocumentDataWheelsItem;
-  setWheel: (wheel: Content.BoardCustomizerDocumentDataWheelsItem) => void;
-  selectedDeck?: Content.BoardCustomizerDocumentDataDecksItem;
-  setDeck: (deck: Content.BoardCustomizerDocumentDataDecksItem) => void;
-  selectedTruck?: Content.BoardCustomizerDocumentDataMetalsItem;
-  setTruck: (trucks: Content.BoardCustomizerDocumentDataMetalsItem) => void;
-  selectedBolt?: Content.BoardCustomizerDocumentDataMetalsItem;
-  setBolt: (bolts: Content.BoardCustomizerDocumentDataMetalsItem) => void;
+  selectedWheel?: WheelItem;
+  setWheel: (wheel: WheelItem) => void;
+  selectedDeck?: DeckItem;
+  setDeck: (deck: DeckItem) => void;
+  selectedTruck?: MetalItem;
+  setTruck: (trucks: MetalItem) => void;
+  selectedBolt?: MetalItem;
+  setBolt: (bolts: MetalItem) => void;
 };
 
 const defaultContext: CustomizerControlsContext = {
@@ -24,10 +24,10 @@ const defaultContext: CustomizerControlsContext = {
 const CustomizerControlsContext = createContext(defaultContext);
 
 type CustomizerControlsProviderProps = {
-  defaultWheel?: Content.BoardCustomizerDocumentDataWheelsItem;
-  defaultDeck?: Content.BoardCustomizerDocumentDataDecksItem;
-  defaultTruck?: Content.BoardCustomizerDocumentDataMetalsItem;
-  defaultBolt?: Content.BoardCustomizerDocumentDataMetalsItem;
+  defaultWheel?: WheelItem;
+  defaultDeck?: DeckItem;
+  defaultTruck?: MetalItem;
+  defaultBolt?: MetalItem;
   children?: ReactNode;
 };
 

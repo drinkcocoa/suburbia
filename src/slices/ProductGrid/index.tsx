@@ -1,23 +1,14 @@
-import { Content, isFilled } from "@prismicio/client";
-import {
-  PrismicRichText,
-  PrismicText,
-  SliceComponentProps,
-} from "@prismicio/react";
-
 import { Bounded } from "@/components/Bounded";
 import { Heading } from "@/components/Heading";
 import { SkateboardProduct } from "./SkateboardProduct";
 import { SlideIn } from "@/components/SlideIn";
+import { ProductGridSliceData, getTextFromRichText } from "@/types";
 
-/**
- * Props for `ProductGrid`.
- */
-export type ProductGridProps = SliceComponentProps<Content.ProductGridSlice>;
+export type ProductGridProps = {
+  slice: ProductGridSliceData;
+  index: number;
+};
 
-/**
- * Component for "ProductGrid" Slices.
- */
 const ProductGrid = ({ slice }: ProductGridProps): JSX.Element => {
   return (
     <Bounded
@@ -27,18 +18,20 @@ const ProductGrid = ({ slice }: ProductGridProps): JSX.Element => {
     >
       <SlideIn>
         <Heading className="text-center ~mb-4/6" as="h2">
-          <PrismicText field={slice.primary.heading} />
+          {getTextFromRichText(slice.primary.heading)}
         </Heading>
       </SlideIn>
       <SlideIn>
         <div className="text-center ~mb-6/10">
-          <PrismicRichText field={slice.primary.body} />
+          {slice.primary.body.map((item, i) => (
+            <p key={i}>{item.text}</p>
+          ))}
         </div>
       </SlideIn>
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {slice.primary.product.map(
           ({ skateboard }) =>
-            isFilled.contentRelationship(skateboard) && (
+            skateboard?.id && (
               <SkateboardProduct key={skateboard.id} id={skateboard.id} />
             )
         )}

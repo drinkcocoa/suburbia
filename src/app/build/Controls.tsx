@@ -1,23 +1,17 @@
 "use client";
 
 import { Heading } from "@/components/Heading";
-import {
-  ColorField,
-  Content,
-  ImageField,
-  isFilled,
-  KeyTextField,
-} from "@prismicio/client";
-import { PrismicNextImage, PrismicNextImageProps } from "@prismicio/next";
+import { WheelItem, DeckItem, MetalItem, ImageField } from "@/types";
+import Image from "next/image";
 import clsx from "clsx";
 import { ComponentProps, ReactNode, useEffect } from "react";
 import { useCustomizerControls } from "./context";
 import { useRouter } from "next/navigation";
 
-type Props = Pick<
-  Content.BoardCustomizerDocumentData,
-  "wheels" | "decks" | "metals"
-> & {
+type Props = {
+  wheels: WheelItem[];
+  decks: DeckItem[];
+  metals: MetalItem[];
   className?: string;
 };
 
@@ -38,14 +32,10 @@ export default function Controls({ wheels, decks, metals, className }: Props) {
   useEffect(() => {
     const url = new URL(window.location.href);
 
-    if (isFilled.keyText(selectedWheel?.uid))
-      url.searchParams.set("wheel", selectedWheel.uid);
-    if (isFilled.keyText(selectedDeck?.uid))
-      url.searchParams.set("deck", selectedDeck.uid);
-    if (isFilled.keyText(selectedTruck?.uid))
-      url.searchParams.set("truck", selectedTruck.uid);
-    if (isFilled.keyText(selectedBolt?.uid))
-      url.searchParams.set("bolt", selectedBolt.uid);
+    if (selectedWheel?.uid) url.searchParams.set("wheel", selectedWheel.uid);
+    if (selectedDeck?.uid) url.searchParams.set("deck", selectedDeck.uid);
+    if (selectedTruck?.uid) url.searchParams.set("truck", selectedTruck.uid);
+    if (selectedBolt?.uid) url.searchParams.set("bolt", selectedBolt.uid);
 
     router.replace(url.href);
   }, [router, selectedWheel, selectedDeck, selectedTruck, selectedBolt]);
@@ -57,11 +47,6 @@ export default function Controls({ wheels, decks, metals, className }: Props) {
           <Option
             key={deck.uid}
             imageField={deck.texture}
-            imgixParams={{
-              rect: [20, 1550, 1000, 1000],
-              width: 150,
-              height: 150,
-            }}
             selected={deck.uid === selectedDeck?.uid}
             onClick={() => setDeck(deck)}
           >
@@ -74,11 +59,6 @@ export default function Controls({ wheels, decks, metals, className }: Props) {
           <Option
             key={wheel.uid}
             imageField={wheel.texture}
-            imgixParams={{
-              rect: [20, 10, 850, 850],
-              width: 150,
-              height: 150,
-            }}
             selected={wheel.uid === selectedWheel?.uid}
             onClick={() => setWheel(wheel)}
           >
@@ -116,7 +96,7 @@ export default function Controls({ wheels, decks, metals, className }: Props) {
 
 type OptionsProps = {
   title?: ReactNode;
-  selectedName?: KeyTextField;
+  selectedName?: string;
   children?: ReactNode;
 };
 
@@ -146,13 +126,11 @@ type OptionProps = Omit<ComponentProps<"button">, "children"> & {
 } & (
     | {
         imageField: ImageField;
-        imgixParams?: PrismicNextImageProps["imgixParams"];
         colorField?: never;
       }
     | {
-        colorField: ColorField;
+        colorField: string;
         imageField?: never;
-        imgixParams?: never;
       }
   );
 
@@ -160,7 +138,6 @@ function Option({
   children,
   selected,
   imageField,
-  imgixParams,
   colorField,
   onClick,
 }: OptionProps) {
@@ -173,12 +150,13 @@ function Option({
         )}
         onClick={onClick}
       >
-        {imageField ? (
-          <PrismicNextImage
-            field={imageField}
-            imgixParams={imgixParams}
-            className="pointer-events-none h-full w-full rounded-full"
-            alt=""
+        {imageField?.url ? (
+          <Image
+            src={imageField.url}
+            alt={imageField.alt || ""}
+            width={40}
+            height={40}
+            className="pointer-events-none h-full w-full rounded-full object-cover"
           />
         ) : (
           <div
